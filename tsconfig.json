@@ -1,0 +1,30 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "useDefineForClassFields": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["vite/client", "node"],
+    "paths": {
+      "@live-instrument/core": ["./packages/core/src/index.ts"],
+      "@live-instrument/ui-svelte": ["./packages/ui-svelte/src/index.ts"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.svelte",
+    "examples/*/src/**/*.ts",
+    "examples/*/src/**/*.svelte",
+    "examples/*/vite.config.ts",
+    "vitest.config.ts"
+  ]
+}

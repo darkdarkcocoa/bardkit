@@ -1,0 +1,7 @@
+node_modules
+dist
+target
+package-lock.json
+Cargo.lock
+*.webp
+*.txt
