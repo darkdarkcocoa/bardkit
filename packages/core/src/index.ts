@@ -7,6 +7,7 @@ export {
   type InstrumentNoteName,
 } from './notes'
 export {
+  INSTRUMENT_LIMITS,
   INSTRUMENT_BATCH_MS,
   INSTRUMENT_BATCH_MAX_EVENTS,
   INSTRUMENT_AUDIBLE_RADIUS,

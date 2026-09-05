@@ -1,0 +1,8 @@
+{
+  "noteCount": 22,
+  "batchMs": 250,
+  "maxEventsPerBatch": 16,
+  "audibleRadiusMeters": 30,
+  "batchesPerSecond": 4,
+  "batchBurst": 4
+}

@@ -1,10 +1,23 @@
 import { describe, expect, it } from 'vitest'
 import {
+  INSTRUMENT_AUDIBLE_RADIUS,
   INSTRUMENT_BATCH_MAX_EVENTS,
+  INSTRUMENT_BATCH_MS,
+  INSTRUMENT_LIMITS,
   fromWireEvents,
   isValidInstrumentBatch,
   toWireEvents,
 } from './wire'
+import { INSTRUMENT_NOTE_COUNT } from './notes'
+
+describe('shared limits', () => {
+  it('match the note table and the wire constants', () => {
+    expect(INSTRUMENT_LIMITS.noteCount).toBe(INSTRUMENT_NOTE_COUNT)
+    expect(INSTRUMENT_BATCH_MS).toBe(250)
+    expect(INSTRUMENT_BATCH_MAX_EVENTS).toBe(16)
+    expect(INSTRUMENT_AUDIBLE_RADIUS).toBe(30)
+  })
+})
 
 const batch = [
   { note: 0, offset_ms: 0 },

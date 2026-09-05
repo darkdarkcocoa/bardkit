@@ -59,8 +59,13 @@ ready-made flag with a visibility hook.
 
 Send a start request (`StartInstrument`) and open the panel only when the
 server confirms (`PlayerInstrumentStarted` for your own id). The server may
-refuse: no instrument, dead, not ready. The same broadcast tells nearby
-clients to prepare for a performer; drop any previous voices for that id.
+refuse: no instrument, dead, not ready. Nearby clients use the same broadcast
+to get ready: drop any voices still playing for that id and call
+`quiet.hold('heard')` immediately, so the playlist has already faded by the
+time the first batch lands. Order matters if the game also has scripted
+songs: lower the playlist first, then stop the song, because a stop handler
+that resumes the playlist would otherwise bring it back under the live
+session.
 
 ### 3. Remote playback
 
@@ -120,10 +125,18 @@ behind your player-state lock.
 Message handling in the reference integration:
 
 1. `StartInstrument` — check the player holds an instrument, is alive and
-   ready; cancel other concentration (fishing, cooking); `performers.start(id)`;
-   if it returned `true`, set the performing pose and broadcast
-   `PlayerInstrumentStarted { player_id }` to players within
-   `INSTRUMENT_AUDIBLE_RADIUS` on the same floor.
+   ready, and cancel other concentration (fishing, cooking). Clear any
+   pending click-to-move as well: a queued walk would end the session on the
+   very next movement tick. Then `performers.start(id)`; if it returned
+   `true`, set the performing pose and broadcast
+   `PlayerInstrumentStarted { player_id }`. Use the radius your other
+   performance events already use, even when it exceeds
+   `INSTRUMENT_AUDIBLE_RADIUS`: a listener out at the edge may still be
+   hearing this player's scripted song and needs to know it stopped. Once
+   the broadcasts are out, confirm `performers.is_live(&id)` one more time.
+   A hit, a trade or a move tick can cancel the session in between and clear
+   the pose; if the pose broadcast is the last message the client sees, it
+   keeps an empty panel open.
 2. `InstrumentNotes { events }` — `limiter.allow()` first, then
    `valid_instrument_batch(&events)`, then `performers.is_live(&id)`; re-check
    the instrument (drop the session if it is gone); snapshot the performer's
@@ -133,19 +146,34 @@ Message handling in the reference integration:
    once, encoded once, to all of them.
 3. Ending — call `performers.stop(&id)` from every path that should end a
    performance; when it returns `true`, clear the pose so clients stop the
-   voices. The reference list: movement, attack, taking a hit, death,
-   equipment change, trade accepted, `StopInteraction`, disconnect, starting
-   a scripted `/play_music` performance.
+   voices. The reference list: movement, attack, taking a hit, death, losing
+   the instrument (dropped or sold), trade accepted, `StopInteraction`,
+   disconnect, starting a scripted `/play_music` performance. Swapping gear
+   is not on the list: as long as the instrument is still in the bag or in
+   hand the session continues, and the ownership check runs again only when
+   an item actually leaves the inventory.
 
 Keep the lock discipline: if `LivePerformers` sits inside a `tokio::sync::RwLock`,
 drop the guard before calling anything that takes the same lock.
 
+Movement is the hot path: every move packet has to ask whether this player
+is performing, and taking the registry's write lock for that question does
+not scale. Keep a count of live performers beside the registry and return
+early while it is zero; when it is not, check membership under a read lock
+and take the write lock only to remove. Funnel every removal through a
+single helper so the count and the set cannot disagree.
+
+These session rules were learned while the kit ran inside
+[OpenMMO](https://github.com/Julian-adv/OpenMMO), its first host.
+
 ## Servers in other languages
 
 Port `valid_instrument_batch` (mirrored in `core` as `isValidInstrumentBatch`),
-the token bucket (4 per second, burst 4) and the hearing rule. The constants
-to keep identical on both sides are 22 notes, 250 ms window, 16 notes per
-batch and 30 m radius.
+the token bucket (4 per second, burst 4) and the hearing rule. The numbers
+both sides must agree on live in `packages/core/src/limits.json`; read that
+file at build time or copy it verbatim, and add a test like the Rust crate's
+`constants_match_the_shared_limits_file` so a change on one side fails the
+other side's build.
 
 ## Protocol notes
 

@@ -1,9 +1,14 @@
 import { INSTRUMENT_NOTE_COUNT } from './notes'
+import limits from './limits.json'
 
-/** Wire-level limits. Keep in step with the server crate (`packages/server-rust`). */
-export const INSTRUMENT_BATCH_MS = 250
-export const INSTRUMENT_BATCH_MAX_EVENTS = 16
-export const INSTRUMENT_AUDIBLE_RADIUS = 30
+/**
+ * Wire-level limits, read from the one file both halves of the kit share.
+ * The Rust crate's constants are checked against the same file in its tests.
+ */
+export const INSTRUMENT_LIMITS = limits
+export const INSTRUMENT_BATCH_MS: number = limits.batchMs
+export const INSTRUMENT_BATCH_MAX_EVENTS: number = limits.maxEventsPerBatch
+export const INSTRUMENT_AUDIBLE_RADIUS: number = limits.audibleRadiusMeters
 
 /** One struck note inside a batch, `offsetMs` relative to the batch's first note. */
 export interface InstrumentNoteEvent {

@@ -13,6 +13,9 @@ use std::time::Instant;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
+// These mirror `packages/core/src/limits.json`; the test module checks them
+// against that file so the two halves cannot drift apart.
+
 /// Notes the client keyboard can strike: C3..C6 natural notes, index order.
 pub const INSTRUMENT_NOTE_COUNT: u8 = 22;
 /// A batch covers this window; offsets inside it are relative to its first note.
@@ -252,5 +255,29 @@ mod tests {
     fn events_serialize_with_snake_case_fields() {
         let json = serde_json::to_string(&notes()[1]).unwrap();
         assert_eq!(json, r#"{"note":7,"offset_ms":80}"#);
+    }
+
+    #[test]
+    fn constants_match_the_shared_limits_file() {
+        let limits: serde_json::Value =
+            serde_json::from_str(include_str!("../../core/src/limits.json")).unwrap();
+        assert_eq!(limits["noteCount"], u64::from(INSTRUMENT_NOTE_COUNT));
+        assert_eq!(limits["batchMs"], u64::from(INSTRUMENT_BATCH_MS));
+        assert_eq!(
+            limits["maxEventsPerBatch"],
+            MAX_INSTRUMENT_EVENTS_PER_BATCH as u64
+        );
+        assert_eq!(
+            limits["audibleRadiusMeters"].as_f64().unwrap() as f32,
+            INSTRUMENT_AUDIBLE_RADIUS
+        );
+        assert_eq!(
+            limits["batchesPerSecond"].as_f64().unwrap() as f32,
+            INSTRUMENT_BATCHES_PER_SEC
+        );
+        assert_eq!(
+            limits["batchBurst"].as_f64().unwrap() as f32,
+            INSTRUMENT_BATCH_BURST
+        );
     }
 }
