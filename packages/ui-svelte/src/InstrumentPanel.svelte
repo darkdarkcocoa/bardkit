@@ -115,6 +115,28 @@
 
   let latch: InstrumentKeyLatch | null = null
   let batcher: InstrumentNoteBatcher | null = null
+  /** Gold dust released by a strike: start x, sideways drift, fall, size,
+   *  delay and duration in px/ms, plus peak opacity. Fixed so every strike
+   *  reads the same and costs nothing to compute. */
+  const GOLD_DUST = [
+    { x: -18, drift: -5, fall: 34, size: 4, delay: 0, dur: 900, alpha: 0.95 },
+    { x: -9, drift: 4, fall: 42, size: 3, delay: 60, dur: 980, alpha: 0.8 },
+    { x: 2, drift: -3, fall: 46, size: 5, delay: 20, dur: 1040, alpha: 1 },
+    { x: 11, drift: 6, fall: 38, size: 3, delay: 110, dur: 920, alpha: 0.85 },
+    { x: 20, drift: -4, fall: 30, size: 4, delay: 40, dur: 860, alpha: 0.9 },
+    { x: -23, drift: 3, fall: 26, size: 3, delay: 150, dur: 820, alpha: 0.7 },
+    { x: -4, drift: 7, fall: 52, size: 3, delay: 90, dur: 1060, alpha: 0.75 },
+    { x: 7, drift: -6, fall: 24, size: 4, delay: 180, dur: 840, alpha: 0.8 },
+    { x: 16, drift: 2, fall: 48, size: 3, delay: 130, dur: 1000, alpha: 0.7 },
+    { x: -14, drift: -2, fall: 20, size: 5, delay: 200, dur: 800, alpha: 0.85 },
+    { x: 24, drift: -7, fall: 40, size: 3, delay: 70, dur: 960, alpha: 0.65 },
+    { x: 0, drift: 1, fall: 16, size: 4, delay: 0, dur: 760, alpha: 1 },
+    { x: -27, drift: 5, fall: 36, size: 2, delay: 30, dur: 940, alpha: 0.6 },
+    { x: 27, drift: 3, fall: 44, size: 2, delay: 160, dur: 1020, alpha: 0.6 },
+    { x: -6, drift: -8, fall: 58, size: 2, delay: 220, dur: 1080, alpha: 0.7 },
+    { x: 13, drift: 4, fall: 56, size: 2, delay: 240, dur: 1060, alpha: 0.65 },
+  ]
+
   let pressedNotes = $state<ReadonlySet<number>>(new Set())
   let strikeBursts = $state<Record<number, number>>({})
   const strikeTimers = new SvelteMap<number, ReturnType<typeof setTimeout>>()
@@ -145,7 +167,7 @@
         if (strikeBursts[note] !== token) return
         delete strikeBursts[note]
         strikeTimers.delete(note)
-      }, 760)
+      }, 1100)
     )
   }
 
@@ -325,7 +347,14 @@
                 >
                   {#if strikeBursts[note.index]}
                     {#key strikeBursts[note.index]}
-                      <span class="cross-flare" aria-hidden="true"></span>
+                      <span class="gold-bloom" aria-hidden="true"></span>
+                      <span class="gold-dust" aria-hidden="true">
+                        {#each GOLD_DUST as d, i (i)}
+                          <i
+                            style={`--x:${d.x}px;--drift:${d.drift}px;--fall:${d.fall}px;--size:${d.size}px;--delay:${d.delay}ms;--dur:${d.dur}ms;--alpha:${d.alpha}`}
+                          ></i>
+                        {/each}
+                      </span>
                       <span class="sound-ring" aria-hidden="true"></span>
                       <span class="rising-note" aria-hidden="true">♪</span>
                     {/key}
@@ -764,7 +793,8 @@
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.96);
   }
 
-  .cross-flare,
+  .gold-bloom,
+  .gold-dust,
   .sound-ring,
   .rising-note {
     position: absolute;
@@ -773,30 +803,52 @@
     pointer-events: none;
   }
 
-  .cross-flare {
+  .gold-bloom {
     top: 50%;
     left: 50%;
-    width: 152%;
-    height: 170%;
-    background:
-      linear-gradient(
-        90deg,
-        transparent 0 10%,
-        rgba(var(--accent), 0.62) 49%,
-        rgba(255, 255, 255, 0.96) 50%,
-        rgba(var(--accent), 0.62) 51%,
-        transparent 90%
-      ),
-      linear-gradient(
-        0deg,
-        transparent 0 17%,
-        rgba(var(--accent), 0.62) 49%,
-        rgba(255, 255, 255, 0.82) 50%,
-        rgba(var(--accent), 0.62) 51%,
-        transparent 83%
-      );
-    filter: blur(3px);
+    width: 150%;
+    height: 150%;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 244, 214, 0.9) 0 6%,
+      rgba(255, 214, 130, 0.55) 22%,
+      rgba(255, 196, 96, 0.18) 46%,
+      transparent 70%
+    );
+    filter: blur(2px);
     transform: translate(-50%, -50%);
+  }
+
+  .gold-dust {
+    top: 42%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    opacity: 1;
+    z-index: 5;
+  }
+
+  .gold-dust i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--size);
+    height: var(--size);
+    margin: calc(var(--size) / -2);
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 250, 230, 1) 0 30%,
+      rgba(255, 214, 130, 0.95) 60%,
+      rgba(255, 190, 80, 0) 100%
+    );
+    box-shadow:
+      0 0 5px rgba(255, 226, 150, 1),
+      0 0 12px rgba(255, 196, 96, 0.6);
+    opacity: 0;
+    animation: dust-fall var(--dur) cubic-bezier(0.22, 0.61, 0.36, 1)
+      var(--delay) both;
   }
 
   .sound-ring {
@@ -815,8 +867,8 @@
     text-shadow: 0 0 8px rgba(var(--accent), 0.8);
   }
 
-  .cross-flare {
-    animation: flare-breathe 460ms ease-out both;
+  .gold-bloom {
+    animation: bloom-breathe 560ms ease-out both;
   }
 
   .sound-ring {
@@ -898,14 +950,41 @@
     border: 0;
   }
 
-  @keyframes flare-breathe {
+  @keyframes bloom-breathe {
     from {
-      opacity: 0.55;
-      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.6);
+    }
+    30% {
+      opacity: 0.9;
     }
     to {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1.08);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.15);
+    }
+  }
+
+  @keyframes dust-fall {
+    0% {
+      opacity: 0;
+      transform: translate(calc(var(--x) * 0.55), -6px) scale(0.3);
+    }
+    14% {
+      opacity: var(--alpha);
+      transform: translate(var(--x), calc(var(--fall) * 0.1)) scale(1);
+    }
+    62% {
+      opacity: calc(var(--alpha) * 0.85);
+      transform: translate(
+          calc(var(--x) + var(--drift) * 0.6),
+          calc(var(--fall) * 0.62)
+        )
+        scale(0.85);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--x) + var(--drift)), var(--fall))
+        scale(0.5);
     }
   }
 
@@ -1151,14 +1230,19 @@
       transition: none;
     }
 
-    .cross-flare,
+    .gold-bloom,
+    .gold-dust i,
     .sound-ring,
     .rising-note {
       animation: none;
     }
 
-    .cross-flare {
-      opacity: 0.75;
+    .gold-bloom {
+      opacity: 0.6;
+    }
+
+    .gold-dust {
+      display: none;
     }
   }
 </style>
