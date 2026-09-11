@@ -2,7 +2,7 @@
 
 # Live Instrument Kit
 
-**Play a mandolin in the browser and let the players around you hear it.**
+**Play a lute in the browser and let the players around you hear it.**
 
 [![CI](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
@@ -21,8 +21,8 @@
 Live Instrument Kit is a drop-in performance system for multiplayer games. A
 player opens a 22-note keyboard HUD and plays; the notes are batched, checked
 by the server and replayed for everyone nearby with distance falloff, while the
-background music steps aside. The reference skin is a mandolin; the note table,
-synth and UI copy are the only mandolin-specific parts.
+background music steps aside. The reference skin is a lute; the note table,
+synth and UI copy are the only lute-specific parts.
 
 ## Why this kit
 
@@ -206,5 +206,5 @@ conditions.
 ## Assets
 
 The synth is procedural; the kit ships no third-party sound. The only binary
-asset is the mandolin ornament behind the panel header, recorded in
+asset is the ornament behind the panel header, recorded in
 [docs/ASSETS.md](docs/ASSETS.md).

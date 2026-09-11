@@ -83,7 +83,7 @@
   <header>
     <h1>Live Instrument Kit</h1>
     <p>
-      Demo stage for the free-play mandolin. Open the panel and play with
+      Demo stage for the free-play lute. Open the panel and play with
       <kbd>Q</kbd>–<kbd>I</kbd>, <kbd>A</kbd>–<kbd>J</kbd>, <kbd>Z</kbd>–<kbd
         >M</kbd
       >. Each batch you send comes back through a loopback relay as a second

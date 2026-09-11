@@ -42,7 +42,7 @@
     onNotes,
     onStop,
     onPressedChange,
-    title = 'Mandolin',
+    title = 'Lute',
     subtitle = 'THREE OCTAVES · 22 NOTES',
     eyebrow = 'FREE PLAY',
     ornamentSrc = defaultOrnament,

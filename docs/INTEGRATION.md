@@ -38,7 +38,7 @@ Props:
 | `onNotes(events)`            | A finished 250 ms batch; send it.                                        |
 | `onStop()`                   | Escape or the close button; tell the server and set `open = false`.      |
 | `onPressedChange(set)`       | Optional mirror of pressed notes (e.g. to animate a hand).               |
-| `title` `subtitle` `eyebrow` | Header copy; defaults to the mandolin skin.                              |
+| `title` `subtitle` `eyebrow` | Header copy; defaults to the lute skin.                                  |
 | `ornamentSrc`                | Header artwork URL, `null` to hide. Defaults to the bundled ornament.    |
 | `claimKey(event)`            | Return `false` to leave a key to the host (e.g. a chat toggle).          |
 
