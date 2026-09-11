@@ -49,24 +49,27 @@ synth and UI copy are the only mandolin-specific parts.
 ## How it works
 
 ```mermaid
-flowchart LR
-  subgraph Performer
+flowchart TB
+  subgraph Performer["Performer client"]
+    direction LR
     K[Key down] --> L[InstrumentKeyLatch]
     L --> P[playInstrumentNote<br/>local, zero latency]
     L --> B[InstrumentNoteBatcher<br/>250 ms window]
   end
-  B -- "InstrumentNotes" --> S1
   subgraph Server["Server (Rust)"]
+    direction LR
     S1[InstrumentBatchLimiter<br/>4 batches/s] --> S2[valid_instrument_batch]
     S2 --> S3[LivePerformers.is_live?]
     S3 --> S4[should_hear<br/>same floor, ≤ 30 m, not blocked]
   end
-  S4 -- "PlayerInstrumentNotes" --> R1
-  subgraph Listener
+  subgraph Listener["Listener client"]
+    direction LR
     R1[RemoteInstrumentPlayer] --> R2[instrumentDistanceGain<br/>resolved per note]
     R2 --> R3[playInstrumentNote]
     R1 --> Q[PlaylistQuietTracker<br/>BGM fades]
   end
+  Performer -- "InstrumentNotes { events }" --> Server
+  Server -- "PlayerInstrumentNotes { player_id, position, floor_level, events }" --> Listener
 ```
 
 The client half never waits for the server; the server half never trusts the
