@@ -1,33 +1,92 @@
-# Live Instrument Kit
+<div align="center">
 
-[![CI](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml)
-[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
+# Live Instrument Kit
 
 **Play a mandolin in the browser and let the players around you hear it.**
 
-**[▶ Live demo](https://darkdarkcocoa.github.io/live-instrument-kit/)** — play
-with your keyboard and hear yourself replayed as a nearby performer.
+[![CI](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml)
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
+[![TypeScript](https://img.shields.io/badge/core-TypeScript-3178c6.svg)](packages/core)
+[![Svelte 5](https://img.shields.io/badge/ui-Svelte%205-ff3e00.svg)](packages/ui-svelte)
+[![Rust](https://img.shields.io/badge/server-Rust-dea584.svg)](packages/server-rust)
 
-![Opening the panel and playing three octaves from the keyboard; each 250 ms batch is validated and replayed](docs/demo.gif)
+**[▶ Live demo](https://darkdarkcocoa.github.io/live-instrument-kit/)** ·
+[Integration guide](docs/INTEGRATION.md) ·
+[Architecture](docs/ARCHITECTURE.md)
 
-Live Instrument Kit is a drop-in performance system for multiplayer games: a
-22-note keyboard HUD, a plucked-string synth that ships no samples, notes
-batched for the wire, server-side validation and rate limiting, distance-based
-playback for nearby listeners, and background music that steps aside while
-someone plays. The reference skin is a mandolin; the note table, synth and UI
-copy are the only mandolin-specific parts.
+<img src="docs/demo.gif" width="820" alt="Opening the panel and playing three octaves from the keyboard; each 250 ms batch is validated and replayed">
 
-The kit is split so each half can be adopted independently.
+</div>
 
+Live Instrument Kit is a drop-in performance system for multiplayer games. A
+player opens a 22-note keyboard HUD and plays; the notes are batched, checked
+by the server and replayed for everyone nearby with distance falloff, while the
+background music steps aside. The reference skin is a mandolin; the note table,
+synth and UI copy are the only mandolin-specific parts.
+
+## Why this kit
+
+- **No samples to ship.** Every note is a Karplus–Strong plucked string
+  rendered on first use and cached. The whole instrument is a few kilobytes of
+  code.
+- **Zero latency for the performer, rhythm kept for the audience.** Local
+  notes play on key-down. Remote listeners get the batch one network hop
+  later with the original timing preserved by per-note offsets.
+- **The server has the final say.** A per-connection token bucket, a batch
+  rule (≤ 16 notes, 250 ms window, ordered offsets) and a performer registry
+  keep floods and forged batches off the wire.
+- **Sounds like it is in the world.** Gain is resolved per note from the
+  performer's snapshotted position, so a listener walking away hears the tail
+  of a phrase fade.
+- **Background music yields.** A quiet tracker holds the playlist down while
+  the panel is open or notes are heard, and releases it 10 s after the last
+  one.
+- **One file for the numbers both sides must agree on.** The batch window,
+  note cap, radius and rate limit live in `limits.json`; the Rust crate's tests
+  assert its constants against it, so a change on one side fails the other
+  side's build.
+
+## How it works
+
+```mermaid
+flowchart LR
+  subgraph Performer
+    K[Key down] --> L[InstrumentKeyLatch]
+    L --> P[playInstrumentNote<br/>local, zero latency]
+    L --> B[InstrumentNoteBatcher<br/>250 ms window]
+  end
+  B -- "InstrumentNotes" --> S1
+  subgraph Server["Server (Rust)"]
+    S1[InstrumentBatchLimiter<br/>4 batches/s] --> S2[valid_instrument_batch]
+    S2 --> S3[LivePerformers.is_live?]
+    S3 --> S4[should_hear<br/>same floor, ≤ 30 m, not blocked]
+  end
+  S4 -- "PlayerInstrumentNotes" --> R1
+  subgraph Listener
+    R1[RemoteInstrumentPlayer] --> R2[instrumentDistanceGain<br/>resolved per note]
+    R2 --> R3[playInstrumentNote]
+    R1 --> Q[PlaylistQuietTracker<br/>BGM fades]
+  end
 ```
-packages/core         TypeScript, framework-free   notes · synth · input latch/batcher · remote replay · BGM yield
-packages/ui-svelte    Svelte 5                      InstrumentPanel HUD + optional visibility store
-packages/server-rust  Rust crate `live-instrument`  wire types · batch validation · token bucket · performer registry
-examples/demo         Vite + Svelte                 loopback stage to play and hear the relay locally
-docs/                 architecture, integration guide, asset provenance
-```
 
-## Try it
+The client half never waits for the server; the server half never trusts the
+client. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) has the numbers behind
+each box.
+
+## Packages
+
+| Package                                            | Stack                      | What it holds                                                                                 |
+| -------------------------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------- |
+| [`@live-instrument/core`](packages/core)           | TypeScript, framework-free | Note table, synth and voice pool, key latch and batcher, wire types, remote replay, BGM yield |
+| [`@live-instrument/ui-svelte`](packages/ui-svelte) | Svelte 5                   | `InstrumentPanel` HUD driven by props, plus an optional visibility store                      |
+| [`live-instrument`](packages/server-rust)          | Rust crate                 | Wire types, batch validation, token bucket, performer registry, listener hearing rule         |
+| [`examples/demo`](examples/demo)                   | Vite + Svelte              | Loopback stage: validates each batch and replays it as a nearby performer                     |
+
+Each half can be adopted on its own. A host without a Rust server can port
+the three rules from `core`, where the batch check is mirrored as
+`isValidInstrumentBatch`.
+
+## Try it locally
 
 ```bash
 npm install
@@ -39,11 +98,73 @@ Click **Play instrument**, then play with `Q`–`I` (high), `A`–`J` (middle) a
 replayed as a second performer at the distance you pick, so you hear what a
 nearby player would.
 
-## Verify
+## Use it in your game
 
-```bash
-npm run verify     # prettier · svelte-check · vitest · cargo test
+**Mount the panel** and send each finished batch through your transport:
+
+```svelte
+<script lang="ts">
+  import { InstrumentPanel } from '@live-instrument/ui-svelte'
+  import { toWireEvents } from '@live-instrument/core'
+  let open = $state(false)
+</script>
+
+<InstrumentPanel
+  {open}
+  performerId={myPlayerId}
+  onNotes={(events) =>
+    socket.send({ InstrumentNotes: { events: toWireEvents(events) } })}
+  onStop={() => {
+    socket.send('StopInteraction')
+    open = false
+  }}
+/>
 ```
+
+**Replay other performers** with gain resolved from where they were:
+
+```ts
+import {
+  RemoteInstrumentPlayer,
+  instrumentDistanceGain,
+  PlaylistQuietTracker,
+} from '@live-instrument/core'
+
+const remote = new RemoteInstrumentPlayer()
+const quiet = new PlaylistQuietTracker({
+  onEnter: () => bgm.fadeOut(),
+  onLeave: () => bgm.resume(),
+})
+
+function onPlayerInstrumentNotes(msg) {
+  remote.play(
+    msg.player_id,
+    msg.events,
+    () =>
+      msg.floor_level === myFloor()
+        ? instrumentDistanceGain(distanceTo(msg.position))
+        : 0,
+    () => quiet.hold('heard')
+  )
+}
+```
+
+**Validate on the server** before relaying to whoever should hear it:
+
+```rust
+use live_instrument::{valid_instrument_batch, should_hear, InstrumentBatchLimiter, LivePerformers};
+
+if limiter.allow() && valid_instrument_batch(&events) && performers.is_live(&player_id) {
+    let listeners = players.iter().filter(|l| {
+        should_hear(&l.id, &player_id, l.floor == floor, l.distance_to(position), l.blocks(&player_id))
+    });
+    // encode once, send PlayerInstrumentNotes { player_id, position, floor_level, events } to each
+}
+```
+
+The full walkthrough, including the start handshake, what ends a performance
+and the lock discipline around the registry, is in
+[docs/INTEGRATION.md](docs/INTEGRATION.md).
 
 ## What the kit decides, and what the host decides
 
@@ -57,9 +178,11 @@ npm run verify     # prettier · svelte-check · vitest · cargo test
 | Playlist-quiet tracker (panel open, heard notes, 10 s hold) | The BGM player that fades out and back                   |
 | Panel UI, keyboard capture, Escape to stop                  | Overlay stacking, camera lock, pose/emote animation      |
 
-See [docs/INTEGRATION.md](docs/INTEGRATION.md) for the hook points and
-[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the pipeline and the numbers
-behind it.
+## Verify
+
+```bash
+npm run verify     # prettier · svelte-check · vitest · cargo test
+```
 
 ## License
 
