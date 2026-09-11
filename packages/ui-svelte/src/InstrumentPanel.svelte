@@ -12,7 +12,7 @@
     type InstrumentNoteEvent,
   } from '@live-instrument/core'
   import { isTypingTarget } from './dom'
-  import defaultOrnament from '../assets/mandolin-ornament.webp'
+  import defaultOrnament from '../assets/instrument-ornament.webp'
 
   interface Props {
     /** Whether the panel is on screen; the host owns this flag. */
