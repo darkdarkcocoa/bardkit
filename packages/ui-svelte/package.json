@@ -1,6 +1,7 @@
 {
   "name": "@live-instrument/ui-svelte",
   "version": "0.1.0",
+  "license": "MIT OR Apache-2.0",
   "private": true,
   "type": "module",
   "description": "Svelte 5 free-play instrument panel (22-note keyboard HUD)",
