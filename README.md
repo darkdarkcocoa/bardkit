@@ -8,6 +8,8 @@
 **[▶ Live demo](https://darkdarkcocoa.github.io/live-instrument-kit/)** — play
 with your keyboard and hear yourself replayed as a nearby performer.
 
+![Opening the panel and playing three octaves from the keyboard; each 250 ms batch is validated and replayed](docs/demo.gif)
+
 Live Instrument Kit is a drop-in performance system for multiplayer games: a
 22-note keyboard HUD, a plucked-string synth that ships no samples, notes
 batched for the wire, server-side validation and rate limiting, distance-based

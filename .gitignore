@@ -10,3 +10,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Local editor/tool state
+.claude/
