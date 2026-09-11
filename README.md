@@ -1,10 +1,19 @@
 # Live Instrument Kit
 
-A drop-in live instrument performance system for multiplayer games: a 22-note
-keyboard HUD, a procedural plucked-string synth, note batching for the wire,
-server-side validation and rate limiting, distance-based playback for nearby
-listeners, and background-music yielding. The reference skin is a mandolin;
-the note table, synth and UI copy are the only mandolin-specific parts.
+[![CI](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml)
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
+
+**Play a mandolin in the browser and let the players around you hear it.**
+
+**[▶ Live demo](https://darkdarkcocoa.github.io/live-instrument-kit/)** — play
+with your keyboard and hear yourself replayed as a nearby performer.
+
+Live Instrument Kit is a drop-in performance system for multiplayer games: a
+22-note keyboard HUD, a plucked-string synth that ships no samples, notes
+batched for the wire, server-side validation and rate limiting, distance-based
+playback for nearby listeners, and background music that steps aside while
+someone plays. The reference skin is a mandolin; the note table, synth and UI
+copy are the only mandolin-specific parts.
 
 The kit is split so each half can be adopted independently.
 
