@@ -2,25 +2,45 @@
   "name": "@bardkit/ui-svelte",
   "version": "0.1.0",
   "license": "MIT OR Apache-2.0",
-  "private": true,
   "type": "module",
   "description": "Svelte 5 free-play instrument panel (22-note keyboard HUD)",
-  "svelte": "./src/index.ts",
-  "types": "./src/index.ts",
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "svelte": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
     },
-    "./assets/*": "./assets/*"
+    "./assets/*": "./dist/assets/*"
   },
   "files": [
-    "src",
-    "assets"
+    "dist"
   ],
   "peerDependencies": {
-    "@bardkit/core": "*",
+    "@bardkit/core": "^0.1.0",
     "svelte": "^5.0.0"
-  }
+  },
+  "devDependencies": {
+    "@sveltejs/package": "^2.5.8"
+  },
+  "scripts": {
+    "build": "svelte-package -i src -o dist",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darkdarkcocoa/bardkit.git",
+    "directory": "packages/ui-svelte"
+  },
+  "homepage": "https://github.com/darkdarkcocoa/bardkit#readme",
+  "keywords": [
+    "svelte",
+    "svelte-component",
+    "web-audio",
+    "gamedev",
+    "hud",
+    "instrument",
+    "music"
+  ]
 }

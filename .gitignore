@@ -13,3 +13,4 @@ Thumbs.db
 
 # Local editor/tool state
 .claude/
+.svelte-kit/

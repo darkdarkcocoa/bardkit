@@ -89,7 +89,19 @@ each box.
 
 Each half can be adopted on its own. A host without a Rust server can port
 the three rules from `core`, where the batch check is mirrored as
-`isValidInstrumentBatch`.
+`isValidInstrumentBatch`. `core` is framework-free, so a React or Vue host can
+take the audio and networking and build its own panel.
+
+## Install
+
+```bash
+npm install @bardkit/core @bardkit/ui-svelte
+```
+
+```toml
+[dependencies]
+bardkit = "0.1"
+```
 
 ## Try it locally
 

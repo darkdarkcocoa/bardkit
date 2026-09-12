@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 description = "Server-side rules for in-game instrument performance: wire types, batch validation, rate limiting, performer registry"
-publish = false
+repository = "https://github.com/darkdarkcocoa/bardkit"
+readme = "README.md"
+keywords = ["gamedev", "multiplayer", "music", "audio"]
+categories = ["game-development"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"], optional = true }

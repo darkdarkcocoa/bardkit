@@ -1,9 +1,21 @@
 # Integration guide
 
-The kit is consumed as source. Copy `packages/core` and `packages/ui-svelte`
-into your client (or reference them as workspace packages), and add
-`packages/server-rust` to your Cargo workspace. Nothing needs a build step
-beyond your bundler and compiler.
+Install the client halves from npm and add the crate to your Cargo workspace:
+
+```bash
+npm install @bardkit/core @bardkit/ui-svelte
+```
+
+```toml
+[dependencies]
+bardkit = "0.1"
+```
+
+`@bardkit/core` ships compiled JavaScript with type declarations, so it needs
+nothing from your build beyond an ES module bundler. `@bardkit/ui-svelte`
+ships Svelte components as source, the Svelte convention, so your bundler
+needs the Svelte plugin you already have. Copying the package folders into
+your own tree still works if you would rather vendor them.
 
 ## Client
 
@@ -177,7 +189,7 @@ These session rules were learned while the kit ran inside
 
 Port `valid_instrument_batch` (mirrored in `core` as `isValidInstrumentBatch`),
 the token bucket (4 per second, burst 4) and the hearing rule. The numbers
-both sides must agree on live in `packages/core/src/limits.json`; read that
+both sides must agree on live in `packages/server-rust/limits.json`; read that
 file at build time or copy it verbatim, and add a test like the Rust crate's
 `constants_match_the_shared_limits_file` so a change on one side fails the
 other side's build.

@@ -13,7 +13,7 @@ use std::time::Instant;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-// These mirror `packages/core/src/limits.json`; the test module checks them
+// These mirror `limits.json` next to this crate; the test module checks them
 // against that file so the two halves cannot drift apart.
 
 /// Notes the client keyboard can strike: C3..C6 natural notes, index order.
@@ -260,7 +260,7 @@ mod tests {
     #[test]
     fn constants_match_the_shared_limits_file() {
         let limits: serde_json::Value =
-            serde_json::from_str(include_str!("../../core/src/limits.json")).unwrap();
+            serde_json::from_str(include_str!("../limits.json")).unwrap();
         assert_eq!(limits["noteCount"], u64::from(INSTRUMENT_NOTE_COUNT));
         assert_eq!(limits["batchMs"], u64::from(INSTRUMENT_BATCH_MS));
         assert_eq!(

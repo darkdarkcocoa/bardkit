@@ -1,5 +1,5 @@
 import { INSTRUMENT_NOTE_COUNT } from './notes'
-import limits from './limits.json'
+import limits from '../../server-rust/limits.json'
 
 /**
  * Wire-level limits, read from the one file both halves of the kit share.

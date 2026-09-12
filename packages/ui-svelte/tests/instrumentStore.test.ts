@@ -5,7 +5,7 @@ import {
   instrumentPanelVisible,
   openInstrumentPanel,
   setInstrumentVisibilityHook,
-} from './instrumentStore'
+} from '../src/instrumentStore'
 
 beforeEach(() => {
   setInstrumentVisibilityHook(null)

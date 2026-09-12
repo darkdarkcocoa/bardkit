@@ -17,7 +17,8 @@
     "test:rust": "cargo test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "npm run format:check && npm run check && npm test && npm run test:rust"
+    "verify": "npm run format:check && npm run check && npm test && npm run test:rust && npm run build:packages",
+    "build:packages": "npm run build -w packages/core && npm run build -w packages/ui-svelte"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^6.1.0",

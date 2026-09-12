@@ -73,7 +73,7 @@ The server accepts a batch only if it is non-empty, at most 16 notes, starts
 at offset 0, stays below 250 ms, names notes below 22 and keeps offsets
 non-decreasing. `isValidInstrumentBatch` in `core` is the same rule for hosts
 without a Rust server. The numbers themselves are defined once, in
-`packages/core/src/limits.json`; the TypeScript side imports it and the Rust
+`packages/server-rust/limits.json`; the TypeScript side imports it and the Rust
 crate's tests assert its constants against it.
 
 ## Rate limiting
