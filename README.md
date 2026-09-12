@@ -11,6 +11,7 @@
 [![Rust](https://img.shields.io/badge/server-Rust-dea584.svg)](packages/server-rust)
 [![npm](https://img.shields.io/npm/v/bardkit-core?label=bardkit-core)](https://www.npmjs.com/package/bardkit-core)
 [![npm](https://img.shields.io/npm/v/bardkit-ui-svelte?label=bardkit-ui-svelte)](https://www.npmjs.com/package/bardkit-ui-svelte)
+[![crates.io](https://img.shields.io/crates/v/bardkit?label=bardkit)](https://crates.io/crates/bardkit)
 
 **[▶ Live demo](https://darkdarkcocoa.github.io/bardkit/)** ·
 [Integration guide](docs/INTEGRATION.md) ·
