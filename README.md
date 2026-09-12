@@ -9,6 +9,8 @@
 [![TypeScript](https://img.shields.io/badge/core-TypeScript-3178c6.svg)](packages/core)
 [![Svelte 5](https://img.shields.io/badge/ui-Svelte%205-ff3e00.svg)](packages/ui-svelte)
 [![Rust](https://img.shields.io/badge/server-Rust-dea584.svg)](packages/server-rust)
+[![npm](https://img.shields.io/npm/v/bardkit-core?label=bardkit-core)](https://www.npmjs.com/package/bardkit-core)
+[![npm](https://img.shields.io/npm/v/bardkit-ui-svelte?label=bardkit-ui-svelte)](https://www.npmjs.com/package/bardkit-ui-svelte)
 
 **[▶ Live demo](https://darkdarkcocoa.github.io/bardkit/)** ·
 [Integration guide](docs/INTEGRATION.md) ·
