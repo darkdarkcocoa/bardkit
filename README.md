@@ -21,8 +21,9 @@
 Live Instrument Kit is a drop-in performance system for multiplayer games. A
 player opens a 22-note keyboard HUD and plays; the notes are batched, checked
 by the server and replayed for everyone nearby with distance falloff, while the
-background music steps aside. The reference skin is a lute; the note table,
-synth and UI copy are the only lute-specific parts.
+background music steps aside. The reference skin is a lute: the header copy
+and artwork are props, and the note table, palette and voice are edited in
+your copy of the source.
 
 ## Why this kit
 

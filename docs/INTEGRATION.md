@@ -42,6 +42,13 @@ Props:
 | `ornamentSrc`                | Header artwork URL, `null` to hide. Defaults to the bundled ornament.    |
 | `claimKey(event)`            | Return `false` to leave a key to the host (e.g. a chat toggle).          |
 
+Those props cover the copy and the artwork; the rest of the skin is meant to
+be edited, not configured. The per-register accent colors, the panel's scoped
+CSS, the three key rows and the solfege labels all live in
+`InstrumentPanel.svelte`, the note table lives in `core/src/notes.ts`, and the
+voice lives in `core/src/audio.ts`. Because the kit is consumed as source,
+reskinning it means changing those files in your copy.
+
 While open, the panel captures its 22 keys and Escape in the capture phase
 and stops propagation, so the host's movement handler never sees them. The
 host should still:
