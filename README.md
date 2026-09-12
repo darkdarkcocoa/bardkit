@@ -18,18 +18,19 @@
 
 </div>
 
-Live Instrument Kit is a drop-in performance system for multiplayer games. A
-player opens a 22-note keyboard HUD and plays; the notes are batched, checked
-by the server and replayed for everyone nearby with distance falloff, while the
-background music steps aside. The reference skin is a lute: the header copy
-and artwork are props, and the note table, palette and voice are edited in
-your copy of the source.
+Live Instrument Kit is drop-in in-game music for multiplayer games: MMOs,
+social worlds, anything where players share a space. A player opens a 22-note
+keyboard HUD and plays; the notes are batched, checked by the server and
+replayed for everyone nearby with distance falloff, while the background music
+steps aside. The reference skin is a lute, the instrument a fantasy bard would
+carry: the header copy and artwork are props, and the note table, palette and
+voice are edited in your copy of the source.
 
 ## Why this kit
 
 - **No samples to ship.** Every note is a Karplus–Strong plucked string
-  rendered on first use and cached. The whole instrument is a few kilobytes of
-  code.
+  synthesized with the Web Audio API on first use and cached. The whole
+  instrument is a few kilobytes of code, not 22 audio files per skin.
 - **Zero latency for the performer, rhythm kept for the audience.** Local
   notes play on key-down. Remote listeners get the batch one network hop
   later with the original timing preserved by per-note offsets.
