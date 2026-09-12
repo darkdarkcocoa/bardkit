@@ -21,35 +21,42 @@
 
 </div>
 
-Bardkit is drop-in in-game music for multiplayer games: MMOs,
-social worlds, anything where players share a space. A player opens a 22-note
-keyboard HUD and plays; the notes are batched, checked by the server and
-replayed for everyone nearby with distance falloff, while the background music
-steps aside. The reference skin is a lute, the instrument a fantasy bard would
-carry: the header copy and artwork are props, and the note table, palette and
-voice are edited in your copy of the source.
+Bardkit lets the players in your multiplayer game pick up an instrument and
+play for whoever happens to be standing nearby. Open the panel, press a key,
+and the note rings out for you at once. A moment later everyone around you
+hears the same phrase, a little quieter the further away they are, while the
+background music politely steps aside. It is happiest in an MMO plaza, but it
+works anywhere players share a space.
 
-## Why this kit
+The reference skin is a lute, because that is what a bard would carry. The
+header text and artwork are props; the notes, the colours and the voice live
+in the source, ready for you to reshape.
 
-- **No samples to ship.** Every note is a Karplus–Strong plucked string
-  synthesized with the Web Audio API on first use and cached. The whole
-  instrument is a few kilobytes of code, not 22 audio files per skin.
-- **Zero latency for the performer, rhythm kept for the audience.** Local
-  notes play on key-down. Remote listeners get the batch one network hop
-  later with the original timing preserved by per-note offsets.
-- **The server has the final say.** A per-connection token bucket, a batch
-  rule (≤ 16 notes, 250 ms window, ordered offsets) and a performer registry
-  keep floods and forged batches off the wire.
-- **Sounds like it is in the world.** Gain is resolved per note from the
-  performer's snapshotted position, so a listener walking away hears the tail
-  of a phrase fade.
-- **Background music yields.** A quiet tracker holds the playlist down while
-  the panel is open or notes are heard, and releases it 10 s after the last
-  one.
-- **One file for the numbers both sides must agree on.** The batch window,
-  note cap, radius and rate limit live in `limits.json`; the Rust crate's tests
-  assert its constants against it, so a change on one side fails the other
-  side's build.
+## What makes it nice
+
+- **No audio files, ever.** Every note is a plucked string synthesized with
+  the Web Audio API the first time it is played, then cached. The whole
+  instrument is a few kilobytes of code, and changing the skin never means
+  shipping 22 new recordings.
+- **You never wait for the server, and nobody hears your rhythm mangled.**
+  Your own notes sound on key-down. Everyone else receives them one network
+  hop later, in a 250 ms batch that carries each note's timing, so the phrase
+  arrives the way you played it.
+- **The server keeps its scepticism.** A token bucket per connection, a strict
+  batch rule (at most 16 notes, a 250 ms window, offsets in order) and a
+  registry of who is actually performing mean floods and forged batches never
+  reach a listener.
+- **It sounds like it is in the world.** Gain is worked out per note from
+  where the performer was standing, so if you walk away mid-song the tail of
+  the phrase fades with you.
+- **The background music knows when to hush.** A quiet tracker lowers the
+  playlist while the panel is open or notes are being heard, and brings it
+  back ten seconds after the last one, so a dramatic pause does not hand the
+  speakers back too early.
+- **Both halves agree on the numbers, or the build tells you.** The batch
+  window, note cap, radius and rate limit sit in one `limits.json`. TypeScript
+  imports it; the Rust crate's tests check their constants against it. Change
+  one side alone and the other side fails.
 
 ## How it works
 
@@ -77,9 +84,9 @@ flowchart TB
   Server -- "PlayerInstrumentNotes { player_id, position, floor_level, events }" --> Listener
 ```
 
-The client half never waits for the server; the server half never trusts the
-client. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) has the numbers behind
-each box.
+The house rule: the client never waits for the server, and the server never
+takes the client's word for anything. [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+has the numbers behind every box.
 
 ## Packages
 
@@ -90,10 +97,10 @@ each box.
 | [`bardkit`](packages/server-rust)         | Rust crate                 | Wire types, batch validation, token bucket, performer registry, listener hearing rule         |
 | [`examples/demo`](examples/demo)          | Vite + Svelte              | Loopback stage: validates each batch and replays it as a nearby performer                     |
 
-Each half can be adopted on its own. A host without a Rust server can port
-the three rules from `core`, where the batch check is mirrored as
-`isValidInstrumentBatch`. `core` is framework-free, so a React or Vue host can
-take the audio and networking and build its own panel.
+Take what you need. The core is framework-free, so a React or Vue game can
+keep the audio and networking and draw its own panel. A server in another
+language only has to port three rules from `core`, where the batch check is
+mirrored as `isValidInstrumentBatch`.
 
 ## Install
 
@@ -113,10 +120,10 @@ npm install
 npm run dev        # http://localhost:5178
 ```
 
-Click **Play instrument**, then play with `Q`–`I` (high), `A`–`J` (middle) and
-`Z`–`M` (low). Every 250 ms batch is validated, delayed like a network hop and
-replayed as a second performer at the distance you pick, so you hear what a
-nearby player would.
+Click **Play instrument** and play with `Q`–`I` (high), `A`–`J` (middle) and
+`Z`–`M` (low). Every 250 ms batch is validated, delayed like a real network
+hop and played back as a second performer standing at whatever distance you
+pick, so you hear yourself the way a neighbour would.
 
 ## Use it in your game
 
@@ -186,9 +193,12 @@ The full walkthrough, including the start handshake, what ends a performance
 and the lock discipline around the registry, is in
 [docs/INTEGRATION.md](docs/INTEGRATION.md).
 
-## What the kit decides, and what the host decides
+## What the kit decides, and what your game decides
 
-| Kit                                                         | Host                                                     |
+Bardkit decides how music is made and moved. Your game decides who gets to
+play and what interrupts them.
+
+| Kit                                                         | Your game                                                |
 | ----------------------------------------------------------- | -------------------------------------------------------- |
 | Note table (C3–C6 naturals, A4 = 440 Hz), key map           | Who may perform (item, class, zone)                      |
 | Synth voice, 4-voice pool, distance curve                   | Player positions, floors, world wrap                     |
@@ -201,7 +211,7 @@ and the lock discipline around the registry, is in
 ## Verify
 
 ```bash
-npm run verify     # prettier · svelte-check · vitest · cargo test
+npm run verify     # prettier · svelte-check · vitest · cargo test · package builds
 ```
 
 ## License
@@ -222,6 +232,6 @@ conditions.
 
 ## Assets
 
-The synth is procedural; the kit ships no third-party sound. The only binary
-asset is the ornament behind the panel header, recorded in
-[docs/ASSETS.md](docs/ASSETS.md).
+Every sound is synthesized, so there is nothing to license. The one binary in
+the repository is the ornament behind the panel header, and
+[docs/ASSETS.md](docs/ASSETS.md) records where it came from.
