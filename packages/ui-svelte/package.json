@@ -1,5 +1,5 @@
 {
-  "name": "@bardkit/ui-svelte",
+  "name": "bardkit-ui-svelte",
   "version": "0.1.0",
   "license": "MIT OR Apache-2.0",
   "type": "module",
@@ -18,7 +18,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "@bardkit/core": "^0.1.0",
+    "bardkit-core": "^0.1.0",
     "svelte": "^5.0.0"
   },
   "devDependencies": {

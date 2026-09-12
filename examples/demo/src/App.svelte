@@ -10,8 +10,8 @@
     toWireEvents,
     type InstrumentNoteEvent,
     type InstrumentNoteWireEvent,
-  } from '@bardkit/core'
-  import { InstrumentPanel } from '@bardkit/ui-svelte'
+  } from 'bardkit-core'
+  import { InstrumentPanel } from 'bardkit-ui-svelte'
 
   // A loopback "server": every batch the local player sends is validated,
   // delayed like a network hop and replayed as a second performer standing

@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@bardkit/core": "*",
-    "@bardkit/ui-svelte": "*"
+    "bardkit-core": "*",
+    "bardkit-ui-svelte": "*"
   }
 }

@@ -3,7 +3,7 @@
 Install the client halves from npm and add the crate to your Cargo workspace:
 
 ```bash
-npm install @bardkit/core @bardkit/ui-svelte
+npm install bardkit-core bardkit-ui-svelte
 ```
 
 ```toml
@@ -11,8 +11,8 @@ npm install @bardkit/core @bardkit/ui-svelte
 bardkit = "0.1"
 ```
 
-`@bardkit/core` ships compiled JavaScript with type declarations, so it needs
-nothing from your build beyond an ES module bundler. `@bardkit/ui-svelte`
+`bardkit-core` ships compiled JavaScript with type declarations, so it needs
+nothing from your build beyond an ES module bundler. `bardkit-ui-svelte`
 ships Svelte components as source, the Svelte convention, so your bundler
 needs the Svelte plugin you already have. Copying the package folders into
 your own tree still works if you would rather vendor them.
@@ -23,8 +23,8 @@ your own tree still works if you would rather vendor them.
 
 ```svelte
 <script lang="ts">
-  import { InstrumentPanel } from '@bardkit/ui-svelte'
-  import { toWireEvents } from '@bardkit/core'
+  import { InstrumentPanel } from 'bardkit-ui-svelte'
+  import { toWireEvents } from 'bardkit-core'
 
   let open = $state(false)
 </script>
@@ -93,7 +93,7 @@ import {
   RemoteInstrumentPlayer,
   instrumentDistanceGain,
   PlaylistQuietTracker,
-} from '@bardkit/core'
+} from 'bardkit-core'
 
 const remote = new RemoteInstrumentPlayer()
 const quiet = new PlaylistQuietTracker({

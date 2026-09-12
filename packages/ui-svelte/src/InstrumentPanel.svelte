@@ -10,7 +10,7 @@
     stopInstrumentPerformer,
     type InstrumentNote,
     type InstrumentNoteEvent,
-  } from '@bardkit/core'
+  } from 'bardkit-core'
   import { isTypingTarget } from './dom'
   import defaultOrnament from './assets/instrument-ornament.webp'
 

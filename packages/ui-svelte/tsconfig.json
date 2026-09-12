@@ -10,7 +10,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "paths": {
-      "@bardkit/core": ["../core/src/index.ts"]
+      "bardkit-core": ["../core/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.svelte", "src/**/*.d.ts"]

@@ -80,12 +80,12 @@ each box.
 
 ## Packages
 
-| Package                                    | Stack                      | What it holds                                                                                 |
-| ------------------------------------------ | -------------------------- | --------------------------------------------------------------------------------------------- |
-| [`@bardkit/core`](packages/core)           | TypeScript, framework-free | Note table, synth and voice pool, key latch and batcher, wire types, remote replay, BGM yield |
-| [`@bardkit/ui-svelte`](packages/ui-svelte) | Svelte 5                   | `InstrumentPanel` HUD driven by props, plus an optional visibility store                      |
-| [`bardkit`](packages/server-rust)          | Rust crate                 | Wire types, batch validation, token bucket, performer registry, listener hearing rule         |
-| [`examples/demo`](examples/demo)           | Vite + Svelte              | Loopback stage: validates each batch and replays it as a nearby performer                     |
+| Package                                   | Stack                      | What it holds                                                                                 |
+| ----------------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------- |
+| [`bardkit-core`](packages/core)           | TypeScript, framework-free | Note table, synth and voice pool, key latch and batcher, wire types, remote replay, BGM yield |
+| [`bardkit-ui-svelte`](packages/ui-svelte) | Svelte 5                   | `InstrumentPanel` HUD driven by props, plus an optional visibility store                      |
+| [`bardkit`](packages/server-rust)         | Rust crate                 | Wire types, batch validation, token bucket, performer registry, listener hearing rule         |
+| [`examples/demo`](examples/demo)          | Vite + Svelte              | Loopback stage: validates each batch and replays it as a nearby performer                     |
 
 Each half can be adopted on its own. A host without a Rust server can port
 the three rules from `core`, where the batch check is mirrored as
@@ -95,7 +95,7 @@ take the audio and networking and build its own panel.
 ## Install
 
 ```bash
-npm install @bardkit/core @bardkit/ui-svelte
+npm install bardkit-core bardkit-ui-svelte
 ```
 
 ```toml
@@ -121,8 +121,8 @@ nearby player would.
 
 ```svelte
 <script lang="ts">
-  import { InstrumentPanel } from '@bardkit/ui-svelte'
-  import { toWireEvents } from '@bardkit/core'
+  import { InstrumentPanel } from 'bardkit-ui-svelte'
+  import { toWireEvents } from 'bardkit-core'
   let open = $state(false)
 </script>
 
@@ -145,7 +145,7 @@ import {
   RemoteInstrumentPlayer,
   instrumentDistanceGain,
   PlaylistQuietTracker,
-} from '@bardkit/core'
+} from 'bardkit-core'
 
 const remote = new RemoteInstrumentPlayer()
 const quiet = new PlaylistQuietTracker({
