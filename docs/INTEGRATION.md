@@ -141,7 +141,7 @@ use bardkit::{
 Per connection: `InstrumentBatchLimiter::new()`. Per world: `LivePerformers<PlayerId>`
 behind your player-state lock.
 
-Message handling in the reference integration:
+Message handling, step by step:
 
 1. `StartInstrument` — check the player holds an instrument, is alive and
    ready, and cancel other concentration (fishing, cooking). Clear any
@@ -165,7 +165,7 @@ Message handling in the reference integration:
    once, encoded once, to all of them.
 3. Ending — call `performers.stop(&id)` from every path that should end a
    performance; when it returns `true`, clear the pose so clients stop the
-   voices. The reference list: movement, attack, taking a hit, death, losing
+   voices. The usual list: movement, attack, taking a hit, death, losing
    the instrument (dropped or sold), trade accepted, `StopInteraction`,
    disconnect, starting a scripted `/play_music` performance. Swapping gear
    is not on the list: as long as the instrument is still in the bag or in
@@ -181,9 +181,6 @@ not scale. Keep a count of live performers beside the registry and return
 early while it is zero; when it is not, check membership under a read lock
 and take the write lock only to remove. Funnel every removal through a
 single helper so the count and the set cannot disagree.
-
-These session rules were learned while the kit ran inside
-[OpenMMO](https://github.com/Julian-adv/OpenMMO), its first host.
 
 ## Servers in other languages
 

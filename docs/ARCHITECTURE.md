@@ -91,7 +91,7 @@ returns `false` for a duplicate so the host skips a second start broadcast;
 `stop` returns `true` only when a performance actually ended so the host
 clears the pose only for players who had one. The host decides what calls
 `stop`: movement, an attack, a landed hit, death, equipment change, an opened
-trade, Escape and disconnect in the reference integration.
+trade, Escape and disconnect are the usual ones.
 
 ## Background music yield
 
