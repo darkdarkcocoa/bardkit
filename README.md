@@ -1,16 +1,16 @@
 <div align="center">
 
-# Live Instrument Kit
+# Bardkit
 
 **Play a lute in the browser and let the players around you hear it.**
 
-[![CI](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/darkdarkcocoa/live-instrument-kit/actions/workflows/ci.yml)
+[![CI](https://github.com/darkdarkcocoa/bardkit/actions/workflows/ci.yml/badge.svg)](https://github.com/darkdarkcocoa/bardkit/actions/workflows/ci.yml)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
 [![TypeScript](https://img.shields.io/badge/core-TypeScript-3178c6.svg)](packages/core)
 [![Svelte 5](https://img.shields.io/badge/ui-Svelte%205-ff3e00.svg)](packages/ui-svelte)
 [![Rust](https://img.shields.io/badge/server-Rust-dea584.svg)](packages/server-rust)
 
-**[▶ Live demo](https://darkdarkcocoa.github.io/live-instrument-kit/)** ·
+**[▶ Live demo](https://darkdarkcocoa.github.io/bardkit/)** ·
 [Integration guide](docs/INTEGRATION.md) ·
 [Architecture](docs/ARCHITECTURE.md)
 
@@ -18,7 +18,7 @@
 
 </div>
 
-Live Instrument Kit is drop-in in-game music for multiplayer games: MMOs,
+Bardkit is drop-in in-game music for multiplayer games: MMOs,
 social worlds, anything where players share a space. A player opens a 22-note
 keyboard HUD and plays; the notes are batched, checked by the server and
 replayed for everyone nearby with distance falloff, while the background music
@@ -80,12 +80,12 @@ each box.
 
 ## Packages
 
-| Package                                            | Stack                      | What it holds                                                                                 |
-| -------------------------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------- |
-| [`@live-instrument/core`](packages/core)           | TypeScript, framework-free | Note table, synth and voice pool, key latch and batcher, wire types, remote replay, BGM yield |
-| [`@live-instrument/ui-svelte`](packages/ui-svelte) | Svelte 5                   | `InstrumentPanel` HUD driven by props, plus an optional visibility store                      |
-| [`live-instrument`](packages/server-rust)          | Rust crate                 | Wire types, batch validation, token bucket, performer registry, listener hearing rule         |
-| [`examples/demo`](examples/demo)                   | Vite + Svelte              | Loopback stage: validates each batch and replays it as a nearby performer                     |
+| Package                                    | Stack                      | What it holds                                                                                 |
+| ------------------------------------------ | -------------------------- | --------------------------------------------------------------------------------------------- |
+| [`@bardkit/core`](packages/core)           | TypeScript, framework-free | Note table, synth and voice pool, key latch and batcher, wire types, remote replay, BGM yield |
+| [`@bardkit/ui-svelte`](packages/ui-svelte) | Svelte 5                   | `InstrumentPanel` HUD driven by props, plus an optional visibility store                      |
+| [`bardkit`](packages/server-rust)          | Rust crate                 | Wire types, batch validation, token bucket, performer registry, listener hearing rule         |
+| [`examples/demo`](examples/demo)           | Vite + Svelte              | Loopback stage: validates each batch and replays it as a nearby performer                     |
 
 Each half can be adopted on its own. A host without a Rust server can port
 the three rules from `core`, where the batch check is mirrored as
@@ -109,8 +109,8 @@ nearby player would.
 
 ```svelte
 <script lang="ts">
-  import { InstrumentPanel } from '@live-instrument/ui-svelte'
-  import { toWireEvents } from '@live-instrument/core'
+  import { InstrumentPanel } from '@bardkit/ui-svelte'
+  import { toWireEvents } from '@bardkit/core'
   let open = $state(false)
 </script>
 
@@ -133,7 +133,7 @@ import {
   RemoteInstrumentPlayer,
   instrumentDistanceGain,
   PlaylistQuietTracker,
-} from '@live-instrument/core'
+} from '@bardkit/core'
 
 const remote = new RemoteInstrumentPlayer()
 const quiet = new PlaylistQuietTracker({
@@ -157,7 +157,7 @@ function onPlayerInstrumentNotes(msg) {
 **Validate on the server** before relaying to whoever should hear it:
 
 ```rust
-use live_instrument::{valid_instrument_batch, should_hear, InstrumentBatchLimiter, LivePerformers};
+use bardkit::{valid_instrument_batch, should_hear, InstrumentBatchLimiter, LivePerformers};
 
 if limiter.allow() && valid_instrument_batch(&events) && performers.is_live(&player_id) {
     let listeners = players.iter().filter(|l| {

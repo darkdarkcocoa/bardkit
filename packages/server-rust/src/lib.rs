@@ -1,4 +1,4 @@
-//! Server-side half of the live instrument kit.
+//! Server-side half of Bardkit: in-game instrument performance.
 //!
 //! The crate is transport- and engine-agnostic: it knows the wire shape of a
 //! note batch, how to validate one, how to throttle a sender and which

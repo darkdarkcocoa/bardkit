@@ -15,8 +15,8 @@
     "skipLibCheck": true,
     "types": ["vite/client", "node"],
     "paths": {
-      "@live-instrument/core": ["./packages/core/src/index.ts"],
-      "@live-instrument/ui-svelte": ["./packages/ui-svelte/src/index.ts"]
+      "@bardkit/core": ["./packages/core/src/index.ts"],
+      "@bardkit/ui-svelte": ["./packages/ui-svelte/src/index.ts"]
     }
   },
   "include": [

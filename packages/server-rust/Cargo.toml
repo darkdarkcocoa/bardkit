@@ -1,9 +1,9 @@
 [package]
-name = "live-instrument"
+name = "bardkit"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-description = "Server-side rules for live instrument performance: wire types, batch validation, rate limiting, performer registry"
+description = "Server-side rules for in-game instrument performance: wire types, batch validation, rate limiting, performer registry"
 publish = false
 
 [dependencies]

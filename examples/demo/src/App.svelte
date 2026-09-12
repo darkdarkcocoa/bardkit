@@ -10,8 +10,8 @@
     toWireEvents,
     type InstrumentNoteEvent,
     type InstrumentNoteWireEvent,
-  } from '@live-instrument/core'
-  import { InstrumentPanel } from '@live-instrument/ui-svelte'
+  } from '@bardkit/core'
+  import { InstrumentPanel } from '@bardkit/ui-svelte'
 
   // A loopback "server": every batch the local player sends is validated,
   // delayed like a network hop and replayed as a second performer standing
@@ -81,7 +81,7 @@
 
 <main>
   <header>
-    <h1>Live Instrument Kit</h1>
+    <h1>Bardkit</h1>
     <p>
       Demo stage for the free-play lute. Open the panel and play with
       <kbd>Q</kbd>–<kbd>I</kbd>, <kbd>A</kbd>–<kbd>J</kbd>, <kbd>Z</kbd>–<kbd

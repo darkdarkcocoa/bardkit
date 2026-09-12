@@ -1,5 +1,5 @@
 {
-  "name": "@live-instrument/ui-svelte",
+  "name": "@bardkit/ui-svelte",
   "version": "0.1.0",
   "license": "MIT OR Apache-2.0",
   "private": true,
@@ -20,7 +20,7 @@
     "assets"
   ],
   "peerDependencies": {
-    "@live-instrument/core": "*",
+    "@bardkit/core": "*",
     "svelte": "^5.0.0"
   }
 }

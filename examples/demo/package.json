@@ -1,5 +1,5 @@
 {
-  "name": "live-instrument-demo",
+  "name": "bardkit-demo",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@live-instrument/core": "*",
-    "@live-instrument/ui-svelte": "*"
+    "@bardkit/core": "*",
+    "@bardkit/ui-svelte": "*"
   }
 }

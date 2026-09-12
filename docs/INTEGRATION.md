@@ -11,8 +11,8 @@ beyond your bundler and compiler.
 
 ```svelte
 <script lang="ts">
-  import { InstrumentPanel } from '@live-instrument/ui-svelte'
-  import { toWireEvents } from '@live-instrument/core'
+  import { InstrumentPanel } from '@bardkit/ui-svelte'
+  import { toWireEvents } from '@bardkit/core'
 
   let open = $state(false)
 </script>
@@ -81,7 +81,7 @@ import {
   RemoteInstrumentPlayer,
   instrumentDistanceGain,
   PlaylistQuietTracker,
-} from '@live-instrument/core'
+} from '@bardkit/core'
 
 const remote = new RemoteInstrumentPlayer()
 const quiet = new PlaylistQuietTracker({
@@ -120,7 +120,7 @@ and battle music a higher rank than the tracker if your game has them.
 ## Server (Rust)
 
 ```rust
-use live_instrument::{
+use bardkit::{
     valid_instrument_batch, should_hear, InstrumentBatchLimiter, InstrumentNoteEvent,
     LivePerformers, INSTRUMENT_AUDIBLE_RADIUS,
 };
